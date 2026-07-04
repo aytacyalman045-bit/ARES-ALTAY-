@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARES ALTAY | SANAL ARŞİVİ v3.5</title>
+    <style>
+        @import url('https://googleapis.com');
+        body { margin: 0; padding: 0; background-color: #030000; color: #ff0033; font-family: 'Share Tech Mono', monospace; overflow-x: hidden; min-height: 100vh; scroll-behavior: smooth; }
+        #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.18; pointer-events: none; }
+        .header { position: fixed; top: 0; left: 0; width: 100%; height: 60px; background: rgba(5, 0, 0, 0.95); border-bottom: 1px solid #ff0033; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; box-sizing: border-box; z-index: 100; box-shadow: 0 2px 25px rgba(255,0,51,0.25); }
+        .header-title { font-family: 'Creepster', cursive; font-size: 1.8rem; color: #ff0033; text-shadow: 0 0 8px #ff0033; letter-spacing: 1px; }
+        .hamburger { cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; width: 28px; height: 18px; z-index: 110; }
+        .hamburger span { display: block; height: 3px; width: 100%; background-color: #ff0033; border-radius: 3px; transition: all 0.3s ease; box-shadow: 0 0 5px #ff0033; }
+        .hamburger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+        .side-menu { position: fixed; top: 0; right: -290px; width: 290px; height: 100%; background: rgba(8, 0, 0, 0.98); border-left: 2px solid #ff0033; z-index: 90; transition: all 0.4s ease; padding-top: 85px; box-sizing: border-box; box-shadow: -15px 0 35px rgba(0,0,0,0.8); }
+        .side-menu.open { right: 0; }
+        .menu-link { display: block; padding: 13px 25px; color: #ff3333; text-decoration: none; font-size: 1.05rem; border-bottom: 1px solid rgba(255,0,51,0.08); transition: 0.3s; font-weight: bold; }
+        .menu-link:hover { background: rgba(255, 0, 51, 0.12); color: #fff; padding-left: 35px; text-shadow: 0 0 10px #ff0033; }
+        .main-content { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; padding: 95px 15px 40px; box-sizing: border-box; min-height: 100vh; }
+        .portal-card { background: rgba(4, 0, 0, 0.88); border: 2px solid #ff0033; border-radius: 20px; box-shadow: 0 0 45px rgba(255, 0, 51, 0.35); max-width: 650px; width: 100%; padding: 35px 25px; box-sizing: border-box; margin-bottom: 30px; }
+        .gotik-heading { font-family: 'Creepster', cursive; font-size: 3.2rem; color: #ff0033; text-shadow: 0 0 20px #ff0033; margin: 0 0 5px 0; text-align: center; letter-spacing: 2px; }
+        .section-title { font-size: 1.35rem; color: #fff; text-transform: uppercase; border-left: 5px solid #ff0033; padding-left: 12px; margin: 35px 0 20px 0; letter-spacing: 2px; text-shadow: 0 0 5px rgba(255,255,255,0.25); font-weight: bold; }
+        .gundelik-not { background: rgba(18, 0, 0, 0.65); border: 1px solid rgba(255,0,51,0.18); border-radius: 10px; padding: 18px; margin-bottom: 20px; color: #f0f0f5; font-size: 1rem; line-height: 1.65; text-align: justify; }
+        .gundelik-not strong { color: #ff3333; text-shadow: 0 0 4px rgba(255,51,51,0.35); display: block; margin-bottom: 6px; font-size: 1.1rem; letter-spacing: 0.5px; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <header class="header">
+        <div class="header-title">ALTAY HUB</div>
+        <div class="hamburger" id="hamburgerMenu" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+    <nav class="side-menu" id="sidebarMenu">
+        <a href="#karargah" class="menu-link" onclick="toggleMenu()">⚡ ARES ESASLARI</a>
+        <a href="#not1" class="menu-link" onclick="toggleMenu()">📌 1. Blöf Patlatmak</a>
+        <a href="#not2" class="menu-link" onclick="toggleMenu()">📌 2. Fake Ban Rezilliği</a>
+        <a href="#not3" class="menu-link" onclick="toggleMenu()">📌 3. API ve Link Masalı</a>
+        <a href="#not4" class="menu-link" onclick="toggleMenu()">📌 4. İşlemci ve Bot Gücü</a>
+        <a href="#not5" class="menu-link" onclick="toggleMenu()">📌 5. Cloudflare Defansı</a>
+        <a href="#not6" class="menu-link" onclick="toggleMenu()">📌 6. Oltalama Maskeleri</a>
+        <a href="#not7" class="menu-link" onclick="toggleMenu()">📌 7. Amele Hostingleri</a>
+        <a href="#not8" class="menu-link" onclick="toggleMenu()">📌 8. Sanalın Rütbe Kuralı</a>
+        <a href="#not9" class="menu-link" onclick="toggleMenu()">📌 9. İcraat ve Saf Kod</a>
+    </nav>
+    <main class="main-content">
+        <div class="portal-card" id="karargah">
+            <h1 class="gotik-heading">ARES ALTAY</h1>
+            <p style="text-align:center; color:#888; margin-top:0; letter-spacing:4px; font-size:0.9rem; font-weight:bold;">SANAL ALEMİN ÇIPLAK GERÇEKLERİ</p>
+            
+            <div class="section-title">9 Devasa Çarşaf Makale</div>
+            
+            <div class="gundelik-not" id="not1">
+                <strong>1. Boş Blöfleri Saniyede Patlatmak</strong>
+                Sanalda karşına geçip "panel açtım, numara uçurdum, her şeyini sildim, akşama chatinizi patlatacam" diye boş caka satan lamer tayfasına denk gelirsen milim sarsılmana gerek yok dostum. Sakin ol ve hemen arkana yaslanıp bunların o arkadaki çorba altyapılarını saniyeler içinde deşifre et. Bu amelelerin %99u internetteki warez hacker forumlarından bedava (free) bulduğu çöp script kırıntılarını gidip 1 dolarlık paylaşımlı amele hosting paketlerine kururlar. Sonra da üstüne campaignsız bedava çektikleri .xyz domaini çakıp grupta çocuk keklemeye çalışırlar. Gerçek bir yazılımcı oltalama sitelerinin arkasına saklanıp grafik tabelalarıyla icraat yapmaz; bizzat kapkara terminalin kök hücreleriyle, asenkron sunucu tünelleriyle konuşur Harvard laboratuvarı nizamıyla lameri tek saniyede dilsiz bırakır.
+            </div>
+
+            <div class="gundelik-not" id="not2">
+                <strong>2. Sahte Ban Ekranı İllüzyonu</strong>
+                Biz o lamer tayfasının WhatsApp veya Telegram gruplarından hazır kopyalayıp "hedef numarayı tamamen sildik, banlattık, sistem açtık" diye chate fırlattıkları o havalı, kırmızı arka planlı, komik hacker logolu sahte ekran görüntülerine (Fake UI) inanacak yaşları çoktan geçtik. O ekrandaki +56 Şili veya +7 Rusya sanal numaralarının bizzat kendi elleriyle bedava sitelerden topladıkları kendi paravan numaraları olduğunu hepimiz biliyoruz. Kendi açtığı sanal numarayı, internetteki ucuz ekran yapma jeneratörleriyle banlanmış gibi gösterip grupta siber baronculuk oynamaya çalışıyorlar. Gerçekten kapatılan veya spam yiyen bir WhatsApp hesabı, uygulamanın kendi kurumsal yeşil-beyaz temiz zemininde yasal "Bu hesap yasaklandı" metnini basar. Bunun dışında üstünde şahıs isimleri yazan, havalı emojiler olan hiçbir ban ekranı siber literatürde yoktur, tamamen çaresizlikten ürettikleri birer illüzyondur.
+            </div>
+
+            <div class="gundelik-not" id="not3">
+                <strong>3. API ve Link Masalı</strong>
+                Yazılımdan network mühendisliğinden zerre kadar anlamayan o piyonlar, tarayıcı çubuğuna kabak gibi parıldayan "?tc=" veya "?gsm=" yazarak en ilkel Get Query yöntemleriyle devasa sistemler kurduklarını, kurumsal sorgu botları tasarladıklarını falan iddia ederler. Ulan bu yöntem internete yeni başlayan acemi amelelerin kurduğu, hiçbir şifreleme ve güvenlik katmanı barındırmayan en hantal ve güvensiz yapıdır. Sıkıştığı ilk salisede veri tabanı kilitlenir ve donar. Kurumsal ve gerçek bir veri akışı için arka planda asenkron tüneller (WebSockets) ve Authorization Token kalkanları (Bearer Auth) kurulması şarttır. Altyapın sağlamsa, kod satırların nizamla örüldüyse o ücretsiz Cloudflare surları bile senin istek paketlerini kapıda eritemez; doğrudan arka plandaki sunucunun kalbine sızıp veriyi havada sökersin.
+            </div>
+
+            <div class="gundelik-not" id="not4">
+                <strong>4. Donanım ve İşlemci Senkronu</strong>
+                Yazdığın otomasyon scriptlerinin veya bota bağladığın o sistemlerin gücü, internetten sağdan soldan çaldığın o içi boş 100 tane çöp eklenti dosyasıyla veya modül sayısıyla ölçülmez dostum. Kodun kalbindeki asenkron Thread iş parçacığı döngülerinin telefonun veya sunucunun işlemci çekirdekleriyle ne kadar uyumlu el skullasmasi, donanımı ne kadar optimize kullandığı önemlidir. Bizzat o şanlı Snapdragon 8 Gen 3 mimarisinin bayt kodlarıyla el skullasmayan, hafıza yönetimini kapıda filtrelemeyen o kırık ve çorba yazılımlar, tazyik anında CPU duvarına toslar, sunucuyu şişirir... Mimarisi kırık olan çorba yazılım, kükreme anında CPU duvarına toslar ve donanım kilitlenir. Gerçek yazılımcı modül sayısıyla değil, bellekte havada koşturduğu saf bellek yönetimiyle kükrer.
+            </div>
+
+            <div class="gundelik-not" id="not5">
+                <strong>5. WAF Süzgeçleri ve IP Engelleri</strong>
+                
