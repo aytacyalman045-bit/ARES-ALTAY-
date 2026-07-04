@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARES ALTAY | SİBER PORTAL v5.0</title>
+    <style>
+        @import url('https://googleapis.com');
+        body { margin: 0; padding: 0; background-color: #030000; color: #ff0033; font-family: 'Share Tech Mono', monospace; overflow-x: hidden; min-height: 100vh; }
+        #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.15; pointer-events: none; }
+        
+        /* 🍔 NAVİGASYON HEADER VE ÇALIŞAN 3 ÇİZGİ NİZAMI */
+        .header { position: fixed; top: 0; left: 0; width: 100%; height: 60px; background: rgba(5, 0, 0, 0.95); border-bottom: 1px solid #ff0033; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; box-sizing: border-box; z-index: 100; box-shadow: 0 2px 25px rgba(255,0,51,0.3); }
+        .header-title { font-family: 'Creepster', cursive; font-size: 1.8rem; color: #ff0033; text-shadow: 0 0 8px #ff0033; }
+        
+        .hamburger { cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; width: 28px; height: 18px; z-index: 200; padding: 5px; }
+        .hamburger span { display: block; height: 3px; width: 100%; background-color: #ff0033; border-radius: 3px; transition: all 0.3s cubic-bezier(0.1, 0.8, 0.1, 1); box-shadow: 0 0 5px #ff0033; }
+        .hamburger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+        
+        .side-menu { position: fixed; top: 0; right: -290px; width: 290px; height: 100%; background: rgba(8, 0, 0, 0.98); border-left: 2px solid #ff0033; z-index: 150; transition: all 0.4s ease; padding-top: 85px; box-sizing: border-box; box-shadow: -15px 0 35px rgba(0,0,0,0.8); }
+        .side-menu.open { right: 0; }
+        .menu-link { display: block; padding: 13px 25px; color: #ff3333; text-decoration: none; font-size: 1.05rem; border-bottom: 1px solid rgba(255,0,51,0.08); transition: 0.3s; font-weight: bold; cursor: pointer; }
+        .menu-link:hover { background: rgba(255, 0, 51, 0.15); color: #fff; padding-left: 35px; text-shadow: 0 0 10px #ff0033; }
+        
+        /* 🏢 ANA GÖVDE VE RESİMLİ PORTAL KARTI KATMANI */
+        .main-content { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; padding: 95px 15px 40px; box-sizing: border-box; min-height: 100vh; }
+        .portal-card { background: rgba(4, 0, 0, 0.88); border: 2px solid #ff0033; border-radius: 20px; box-shadow: 0 0 45px rgba(255, 0, 51, 0.35); max-width: 650px; width: 100%; padding: 35px 25px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
+        .gotik-heading { font-family: 'Creepster', cursive; font-size: 3.2rem; color: #ff0033; text-shadow: 0 0 20px #ff0033; margin: 0 0 5px 0; text-align: center; }
+        
+        /* 🖼️ [MÜHENDİSLİK DETAYI]: KIPKIRMIZI NEON ZIRHLI PROFİL RESMİ KATMANI */
+        .ares-avatar-container { margin: 15px 0; position: relative; width: 130px; height: 130px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #ff0033, #990000, #ff0033); box-shadow: 0 0 25px rgba(255, 0, 51, 0.6); animation: rotateGlow 4s linear infinite; }
+        .ares-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #030000; background-color: #0c0101; }
+        
+        .section-title { font-size: 1.35rem; color: #fff; text-transform: uppercase; border-left: 5px solid #ff0033; padding-left: 12px; margin: 35px 0 20px 0; letter-spacing: 2px; text-shadow: 0 0 5px rgba(255,255,255,0.25); font-weight: bold; width: 100%; text-align: left; }
+        .gundelik-not { display: none; background: rgba(18, 0, 0, 0.7); border: 1px solid rgba(255,0,51,0.22); border-radius: 12px; padding: 22px; margin-top: 25px; color: #f0f0f5; font-size: 1.05rem; line-height: 1.7; text-align: justify; animation: fadeInUp 0.4s ease-in-out forwards; width: 100%; box-sizing: border-box; }
+        .gundelik-not.active { display: block; }
+        .gundelik-not strong { color: #ff3333; text-shadow: 0 0 4px rgba(255,51,51,0.4); display: block; margin-bottom: 8px; font-size: 1.2rem; text-align: center; font-family: 'Creepster', cursive; letter-spacing: 1px; }
+        
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes rotateGlow { 100% { filter: hue-rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <header class="header">
+        <div class="header-title">ALTAY HUB</div>
+        <div class="hamburger" id="hamburgerMenu" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <nav class="side-menu" id="sidebarMenu">
+        <a class="menu-link" onclick="showContent('not1')">📌 1. Blöf Patlatmak</a>
+        <a class="menu-link" onclick="showContent('not2')">📌 2. Fake Ban Komedisi</a>
+        <a class="menu-link" onclick="showContent('not3')">📌 3. Sorgu Masalları</a>
+        <a class="menu-link" onclick="showContent('not4')">📌 4. Telefon ve İşlemci Gücü</a>
+        <a class="menu-link" onclick="showContent('not5')">📌 5. Cloudflare Yalanları</a>
+        <a class="menu-link" onclick="showContent('not6')">📌 6. Sinsi Oltalama Maskeleri</a>
+        <a href="https://github.io" class="menu-link">🔄 Sistemi Yenile</a>
+    </nav>
+
+    <main class="main-content">
+        <div class="portal-card">
+            <h1 class="gotik-heading">ARES ALTAY</h1>
+            
+            <!-- 🖼️ RESİM ENJEKSİYON ALANI BERAT! BURAYA O PİYONUN PP RESMİNİN LİNKİNİ ÇAKACAKSIN -->
+            <div class="ares-avatar-container">
+                <!-- src="" kısmının içine o piyonun profil resminin URL linkini aynen yapıştır Berat! -->
+                <img src="https://imgur.com" alt="Ares PP" class="ares-avatar" onerror="this.src='https://flaticon.com'">
+            </div>
+            
+            <p style="text-align:center; color:#888; margin-top:5px; letter-spacing:4px; font-size:0.9rem; font-weight:bold; width: 100%;">MENÜDEN BİR SEÇENEK SEÇ VE İZLE :)</p>
+            
+            <div id="welcomeBox" style="color: #ff3333; text-align: center; margin-top: 25px; font-size: 1.1rem; line-height: 1.6; width: 100%;">
+                🎯 Karargah paneline hoş geldin lamer tayfası...<br>
+                Sağ üstteki 3 çizgiye dokun, sanal alemin o tüm rezilliklerini bizzat senin adına nasıl çarşaf çarşaf ifşa ettiğimi çıplak gözle izle!
+            </div>
+
+            <div class="gundelik-not" id="not1">
+                <strong>1. BOŞ BLÖFLERİ SANİYEDE TOKATLAMAK</strong>
+                Sanalda iki tane dandik komut öğrenip chate gelerek "Aga panel açtım, senin numaranı uçuracam, akşama chatinizi patlatacam" diye gezen o lamerleri gördükçe acayip gülüyorum ya. Sakin olun olm, arkanıza yaslanın ve bunların o çorba kodlarına iyi bakın. Bu amelelerin yaptığı tek şey, internetten bedava buldukları çöp script kırıntılarını gidip 1 liralık paylaşımlı hosting paketlerine kurmaktır. Üstüne de campaignsız beleş çektikleri .xyz linkini ekleyip burada siber baronculuk oynamaya çalışırlar. Karşıma geçip tabela resimleriyle çocuk büyütmeyi bırakın, gerçek yazılımcı linklerin arkasına saklanmaz, bizzat terminalin kök hücreleriyle kükrer ve adamı tek bir saniyede dilsiz bırakır, geçmiş olsun piyonlar!
+            </div>
+
+            <div class="gundelik-not" id="not2">
+                <strong>2. FAKE BAN EKRANI KOMEDİSİ</strong>
+                Grupta durmadan "hedef numarayı tamamen sildik, banlattık" diye fırlatılan o kıpkırmızı, komik hacker logolu ekran görüntülerine cidden inanıyor musunuz olm? O chate attıkları +56 Şili veya +7 Rusya numaralarının bizzat kendi elleriyle açtıkları kendi paravan hatları olduğunu tüm sanal alem biliyor zaten. Kendi numarasını, internetteki ucuz ekran yapma sitelerinden banlanmış gibi gösterip grupta siber baronculuk oynamaya çalışıyorlar. Gerçekten kapatılan veya spam yiyen bir WhatsApp hesabı, uygulamanın kendi kurumsal yeşil-beyaz temiz zemininde yasal metni basar. Bunun dışında üstünde şahıs isimleri yazan, havalı emojiler olan hiçbir ban ekranı siber literatürde yoktur, tamamen çaresizlikten ürettikleri komik birer çocuk kandırmacasından ibarettir!
+            </div>
+
+            <div class="gundelik-not" id="not3">
+                <strong>3. API VE SORGU MASALLARI</strong>
+                Bizim o lamer tayfası tarayıcı çubuğuna kabak gibi parıldayan "?tc=" veya "?gsm=" yazarak en ilkel Get Query yöntemleriyle devasa sistemler kurduklarını falan iddia ederler. Ulan bu yöntem internete yeni başlayan acemi amelelerin kurduğu, hiçbir şifreleme ve güvenlik katmanı barındırmayan en hantal ve güvensiz yapıdır. Sıkıştığı ilk salisede veri tabanı kilitlenir ve donar. Kurumsal ve gerçek bir veri akışı için arka planda asenkron tüneller ve Authorization Token kalkanları kurulması şarttır. Altyapın sağlamsa, o ücretsiz Cloudflare surları bile senin istek paketlerini kapıda eritemez; doğrudan arka plandaki sunucunun kalbine sızıp veriyi havada sökersin.
+            </div>
+
+            <div class="gundelik-not" id="not4">
+                <strong>4. DONAN hardware VE İŞLEMCİ SENKRONU</strong>
+                
